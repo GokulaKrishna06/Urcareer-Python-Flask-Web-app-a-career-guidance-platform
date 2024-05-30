@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>urcareer - Assessment</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    body {
+      
+      background-size: cover;
+      background-position: center;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+    .container {
+      margin-top: 50px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2, h3 {
+      font-family: 'Arial Black', sans-serif;
+      color: #007bff;
+    }
+    p {
+      font-size: 18px;
+    }
+    .btn-primary {
+      font-size: 18px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .pagination {
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .mcq-card {
+      margin-bottom: 20px;
+      animation: fadeInUp 1s;
+    }
+    /* Add more CSS styles for specific elements as needed */
+  </style>
+</head>
+<body>
+  <div class="container animate__animated animate__fadeIn">
+    <h1>Assessment</h1>
+    <div id="mcqContainer"></div>
+    <nav aria-label="Page navigation">
+      <ul class="pagination" id="pagination"></ul>
+    </nav>
+    <button type="button" class="btn btn-primary" onclick="submitAssessment()">Submit</button>
+  </div>
+
+  <script>
+    const mcqs = [
+  {
+    question: "What is the output of the following code?",
+    code: "def foo(x, y):\n\tif x % y == 0:\n\t\treturn x\n\telse:\n\t\treturn y\n\nprint(foo(5, 10))",
+    options: ["5", "10", "0", "None of the above"],
+    answer: "10"
+  },
+  {
+    question: "What will be the output of the following code snippet?",
+    code: "a = 2\nb = 3\na = a + b\nb = a - b\na = a - b\nprint(a, b)",
+    options: ["3 2", "2 3", "0 0", "5 2"],
+    answer: "3 2"
+  },
+  {
+    question: "What will be the output of the following code?",
+    code: "def mystery(n):\n\tif n == 0:\n\t\treturn 0\n\treturn (n % 10 + mystery(n // 10))\n\nprint(mystery(1234))",
+    options: ["4", "10", "5", "None of the above"],
+    answer: "10"
+  },
+  {
+    question: "What is the output of the following code?",
+    code: "x = 5\ny = 0\ntry:\n\tresult = x / y\nexcept ZeroDivisionError:\n\tprint('Error: Division by zero')",
+    options: ["Error: Division by zero", "Error: Variable y is zero", "Error: Variable x is zero", "Error: Division by zero, Variable x is zero"],
+    answer: "Error: Division by zero"
+  },
+  {
+    question: "What does the following code snippet do?",
+    code: "def func(x, y):\n\treturn x + y\n\nresult = func(5, -3)",
+    options: ["Adds two numbers", "Subtracts two numbers", "Multiplies two numbers", "None of the above"],
+    answer: "Adds two numbers"
+  },
+  {
+    question: "What will be the output of the following code snippet?",
+    code: "a = [1, 2, 3]\nb = [4, 5, 6]\nc = a + b\nprint(c)",
+    options: ["[1, 2, 3, 4, 5, 6]", "[1, 2, 3], [4, 5, 6]", "[[1, 2, 3], [4, 5, 6]]", "[1, 4, 2, 5, 3, 6]"],
+    answer: "[1, 2, 3, 4, 5, 6]"
+  },
+  {
+    question: "What is the output of the following code snippet?",
+    code: "x = 5\nprint(x--)",
+    options: ["5", "-5", "Syntax Error", "None of the above"],
+    answer: "5"
+  },
+  {
+    question: "What does the following code snippet do?",
+    code: "def fibonacci(n):\n\tif n <= 1:\n\t\treturn n\n\telse:\n\t\treturn (fibonacci(n - 1) + fibonacci(n - 2))\n\nprint(fibonacci(5))",
+    options: ["Finds the factorial of a number", "Finds the greatest common divisor", "Generates Fibonacci sequence", "None of the above"],
+    answer: "Generates Fibonacci sequence"
+  },
+  {
+    question: "What is the output of the following code snippet?",
+    code: "x = [1, 2, 3]\nprint(x[10])",
+    options: ["IndexError", "0", "None", "TypeError"],
+    answer: "IndexError"
+  },
+  {
+    question: "What does the following code snippet do?",
+    code: "def func(n):\n\tif n == 0:\n\t\treturn 0\n\treturn 1 + func(n // 2)\n\nprint(func(5))",
+    options: ["Counts the number of digits in a binary representation of a number", "Calculates the square root of a number", "Calculates the cube of a number", "None of the above"],
+    answer: "Counts the number of digits in a binary representation of a number"
+  }
+];
+
+    const mcqsPerPage = 2;
+    let currentPage = 1;
+
+    function displayMCQs(page) {
+      const startIndex = (page - 1) * mcqsPerPage;
+      const endIndex = startIndex + mcqsPerPage;
+      const mcqSlice = mcqs.slice(startIndex, endIndex);
+
+      const mcqContainer = document.getElementById('mcqContainer');
+      mcqContainer.innerHTML = '';
+
+      mcqSlice.forEach((mcq, index) => {
+        const mcqCard = document.createElement('div');
+        mcqCard.classList.add('mcq-card');
+
+        const questionNum = startIndex + index + 1;
+        const questionText = document.createElement('p');
+        questionText.textContent = `${questionNum}. ${mcq.question}`;
+        mcqCard.appendChild(questionText);
+
+        if (mcq.code) {
+          const codeSnippet = document.createElement('pre');
+          codeSnippet.innerHTML = `<code>${mcq.code}</code>`;
+          mcqCard.appendChild(codeSnippet);
+        }
+
+        mcq.options.forEach((option, optionIndex) => {
+          const label = document.createElement('label');
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = `q${questionNum}`;
+          radio.value = option;
+          label.appendChild(radio);
+          label.appendChild(document.createTextNode(option));
+          mcqCard.appendChild(label);
+          mcqCard.appendChild(document.createElement('br'));
+        });
+
+        mcqContainer.appendChild(mcqCard);
+      });
+    }
+
+    function displayPagination(totalPages) {
+      const pagination = document.getElementById('pagination');
+      pagination.innerHTML = '';
+
+      for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.classList.add('page-item');
+        if (i === currentPage) {
+          li.classList.add('active');
+        }
+        const a = document.createElement('a');
+        a.classList.add('page-link');
+        a.href = '#';
+        a.textContent = i;
+        a.onclick = function() {
+          currentPage = i;
+          displayMCQs(currentPage);
+          highlightActivePage();
+        };
+        li.appendChild(a);
+        pagination.appendChild(li);
+      }
+    }
+
+    function highlightActivePage() {
+      const paginationItems = document.querySelectorAll('.pagination .page-item');
+      paginationItems.forEach(item => item.classList.remove('active'));
+      paginationItems[currentPage - 1].classList.add('active');
+    }
+
+    function submitAssessment() {
+      // Submit the form data and redirect to view score page
+      // This is a placeholder, you should handle form data submission
+      window.location.href = 'view-score.html';
+    }
+
+    const totalPages = Math.ceil(mcqs.length / mcqsPerPage);
+    displayMCQs(currentPage);
+    displayPagination(totalPages);
+  </script>
+</body>
+</html>

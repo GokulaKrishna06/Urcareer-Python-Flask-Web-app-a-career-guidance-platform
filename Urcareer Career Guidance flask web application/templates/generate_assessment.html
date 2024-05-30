@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function showPage(pageNumber) {
+            var questions = document.getElementsByClassName('question');
+            var totalPages = Math.ceil(questions.length / 1);  // Change the number to display more questions per page
+
+            for (var i = 0; i < questions.length; i++) {
+                questions[i].style.display = 'none';
+            }
+
+            questions[pageNumber - 1].style.display = 'block';
+
+            document.getElementById('pageNumber').innerText = pageNumber;
+        }
+
+        function nextPage() {
+            var currentPage = parseInt(document.getElementById('pageNumber').innerText);
+            showPage(currentPage + 1);
+        }
+
+        function prevPage() {
+            var currentPage = parseInt(document.getElementById('pageNumber').innerText);
+            showPage(currentPage - 1);
+        }
+    </script>
+</head>
+<body onload="showPage(1)">
+    <h1>Assessment</h1>
+    <form action="{{ url_for('submit_assessment') }}" method="post">
+        <div id="questions-container">
+            {% for question in questions %}
+                <div class="question" style="display: none;">
+                    <p>{{ question }}</p>
+                    <input type="text" name="answers">
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" onclick="prevPage()">Previous</button>
+        <span id="pageNumber">1</span>
+        <button type="button" onclick="nextPage()">Next</button>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

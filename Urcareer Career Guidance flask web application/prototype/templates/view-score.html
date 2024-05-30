@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>urcareer - View Score</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    body {
+      
+      background-size: cover;
+      background-position: center;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+    .container {
+      margin-top: 50px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2, h3 {
+      font-family: 'Arial Black', sans-serif;
+      color: #007bff;
+    }
+    p {
+      font-size: 18px;
+    }
+    .btn-primary {
+      font-size: 18px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .score-container {
+      text-align: center;
+    }
+    .progress-circle {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+    }
+    /* Add more CSS styles for specific elements as needed */
+  </style>
+</head>
+<body>
+  <div class="container animate__animated animate__fadeIn">
+    <h1>Your Score</h1>
+    <div class="score-container">
+      <div id="progressCircle" class="progress-circle"></div>
+
+    </div>
+    <button class="btn btn-primary" onclick="window.location.href='job-recommendation.html'">See urcareer</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/1.1.0/progressbar.min.js"></script>
+  <script>
+    const progressBar = new ProgressBar.Circle('#progressCircle', {
+      color: '#007bff',
+      strokeWidth: 10,
+      trailWidth: 10,
+      trailColor: '#f3f3f3',
+      easing: 'easeInOut',
+      duration: 2000,
+      text: {
+        autoStyleContainer: false
+      },
+      from: { color: '#007bff', width: 10 },
+      to: { color: '#007bff', width: 10 },
+      step: function(state, circle) {
+        circle.path.setAttribute('stroke', state.color);
+        circle.path.setAttribute('stroke-width', state.width);
+        const value = Math.round(circle.value() * 100);
+        if (value === 0) {
+          circle.setText('');
+        } else {
+          circle.setText(value + '%');
+        }
+      }
+    });
+
+    progressBar.animate(0.8); // 80% progress
+  </script>
+</body>
+</html>
